@@ -1,13 +1,12 @@
 package instagramService.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import instagramService.scraper.InstagramScraper;
 import instagramService.user.JsonBuilder;
-import instagramService.user.UserInfo;
 import org.jsoup.nodes.Document;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Map;
 
 
@@ -24,13 +23,13 @@ public class UsernameController {
     }
 
 
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public Map<String, Object> test(@RequestParam String name) {
+    @RequestMapping(value = "/username", method = RequestMethod.GET)
+    public Map<String, Object> username(@RequestParam String username) {
         try {
-            final Document userPage = scraper.getDocument(scraper.buildUrl(name));
-            final UserInfo userInfo = scraper.buildUserInfo(userPage);
-            return jsonBuilder.buildJsonResponse(userInfo);
-        } catch (IOException e) {
+            final Document userPage = scraper.getDocument(scraper.buildUrl(username));
+            final JsonNode userJson = scraper.extractUserJson(userPage);
+            return jsonBuilder.buildJsonResponse(userJson);
+        } catch (Exception e) {
             return jsonBuilder.buildFailedResponse();
         }
     }

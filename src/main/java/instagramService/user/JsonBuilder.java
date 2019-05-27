@@ -1,5 +1,6 @@
 package instagramService.user;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -14,7 +15,7 @@ public class JsonBuilder {
 
     }
 
-    public Map<String, Object> buildJsonResponse(final UserInfo userInfo){
+    public Map<String, Object> buildJsonResponse(final JsonNode userInfo){
         //TODO
         Map<String, Object> m = new HashMap<>();
         m.put("worked", true);

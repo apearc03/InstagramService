@@ -1,7 +1,8 @@
 package instagramService.scraper;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import instagramService.config.Config;
-import instagramService.user.UserInfo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
@@ -15,52 +16,40 @@ public class InstagramScraper {
     private final Config config;
 
     @Inject
-    InstagramScraper(final Config conf){
+    public InstagramScraper(final Config conf){
         this.config = conf;
-    }
-
-    public Document getDocument(final String url) throws IOException {
-        return Jsoup.connect(url).get();
-    }
-
-
-    public UserInfo buildUserInfo(final Document d){
-        return new UserInfo(
-                extractUsername(d),
-                extractName(d),
-                extractPosts(d),
-                extractFollowers(d),
-                extractFollowing(d),
-                extractBio(d)
-        );
-    }
-
-    private String extractUsername(final Document d){
-        return "";
-    }
-
-    private String extractName(final Document d){
-        return "";
-    }
-
-    private int extractPosts(final Document d){
-        return 0;
-    }
-
-    private int extractFollowers(final Document d){
-        return 0;
-    }
-
-    private int extractFollowing(final Document d){
-        return 0;
-    }
-
-    private String extractBio(final Document d){
-        return "";
     }
 
     public String buildUrl(final String name) {
         return config.getUrl()
                 .concat(name);
     }
+
+    public Document getDocument(final String url) throws Exception {
+        return Jsoup.connect(url).get();
+    }
+
+    //extract user json from the data.
+    public JsonNode extractUserJson(final Document document) throws Exception {
+               final String userData = getUserData(document);
+                final ObjectMapper mapper = new ObjectMapper();
+                return mapper.readTree(userData.substring(userData.indexOf("{")))
+                        .get("entry_data")
+                        .get("ProfilePage")
+                        .get(0)
+                        .get("graphql")
+                        .get("user");
+    }
+
+    //Extract user data.
+    private String getUserData(final Document document) throws IOException {
+        return document.body().
+                children()
+                .stream()
+                .filter(element -> element.data().contains("window._sharedData") && element.data().contains("user"))
+                .findFirst()
+                .orElseThrow(IOException::new).data();
+    }
+
+
 }
