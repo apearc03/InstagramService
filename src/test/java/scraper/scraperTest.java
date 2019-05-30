@@ -16,6 +16,7 @@ public class scraperTest {
 
 
     private Config config;
+    private ObjectMapper mapper;
     private InstagramScraper scraper;
     private ConfigModule configModule;
 
@@ -23,7 +24,8 @@ public class scraperTest {
     public void setup(){
         configModule = new ConfigModule();
         config = configModule.provideConfig();
-        scraper = new InstagramScraper(config);
+        mapper = new ObjectMapper();
+        scraper = new InstagramScraper(config, mapper);
     }
 
     @Test

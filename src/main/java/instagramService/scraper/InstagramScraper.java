@@ -14,10 +14,12 @@ import java.io.IOException;
 public class InstagramScraper {
 
     private final Config config;
+    private final ObjectMapper mapper;
 
     @Inject
-    public InstagramScraper(final Config conf){
+    public InstagramScraper(final Config conf, final ObjectMapper map){
         this.config = conf;
+        this.mapper = map;
     }
 
     public String buildUrl(final String name) {
@@ -32,7 +34,6 @@ public class InstagramScraper {
     //extract user json from the data.
     public JsonNode extractUserJson(final Document document) throws Exception {
                final String userData = getUserData(document);
-                final ObjectMapper mapper = new ObjectMapper();
                 return mapper.readTree(userData.substring(userData.indexOf("{")))
                         .get("entry_data")
                         .get("ProfilePage")
