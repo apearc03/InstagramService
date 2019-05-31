@@ -16,7 +16,8 @@ public class JsonBuilder {
     }
 
     public Map<String, Object> buildJsonResponse(final JsonNode userInfo){
-        //TODO
+        //TODO loop through config list to getFields to output in map?
+        //If config list is zero then return a unique message in json?
         Map<String, Object> m = new HashMap<>();
         m.put("worked", true);
         return m;

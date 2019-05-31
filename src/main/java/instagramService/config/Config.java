@@ -1,6 +1,5 @@
 package instagramService.config;
 
-
 public class Config {
 
     private String url;

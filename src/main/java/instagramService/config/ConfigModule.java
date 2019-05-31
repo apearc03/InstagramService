@@ -11,8 +11,8 @@ import java.io.InputStream;
 @Configuration
 public class ConfigModule {
 
-    @Bean
-    @Singleton
+   @Bean
+   @Singleton
     public Config provideConfig() {
         final Yaml yaml = new Yaml(new Constructor(Config.class));
         final InputStream inputStream = this.getClass()
