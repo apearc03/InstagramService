@@ -31,7 +31,7 @@ public class InstagramScraper {
         return Jsoup.connect(url).get();
     }
 
-    //extract user json from the data.
+    //extract instagramService.user json from the data.
     public JsonNode extractUserJson(final Document document) throws Exception {
                final String userData = getUserData(document);
                 return mapper.readTree(userData.substring(userData.indexOf("{")))
@@ -42,7 +42,7 @@ public class InstagramScraper {
                         .get("user");
     }
 
-    //Extract user data.
+    //Extract instagramService.user data.
     private String getUserData(final Document document) throws IOException {
         return document.body().
                 children()

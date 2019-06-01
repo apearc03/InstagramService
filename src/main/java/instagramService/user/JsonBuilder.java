@@ -19,8 +19,7 @@ public class JsonBuilder {
     }
 
     public Map<String, Object> buildJsonResponse(final JsonNode userInfo){
-        //TODO loop through config list to getFields to output in map?
-        //For each item in list add to map the field name and the value from userInfo
+        //For each item in list add the field name and the value from userInfo to map
         Map<String, Object> result = new HashMap<>();
         config.getFields()
                 .stream()
@@ -36,7 +35,7 @@ public class JsonBuilder {
         return m;
     }
 
-    //test this.
+
     Object getAttributeValue(final String field, final JsonNode userInfo){
         switch (field){
             case "followersCount":
