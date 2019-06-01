@@ -279,7 +279,7 @@ public class scraperTest {
                    " </body>\n" +
                    "</html>";
            final Document dummyData = Jsoup.parse(dummyHTML);
-            JsonNode extractedData = scraper.extractUserJson(dummyData);
+           final JsonNode extractedData = scraper.extractUserJson(dummyData);
             System.out.println();
             //TODO  Assert on data fields? assert not null etc?
         } catch (Exception e) {
