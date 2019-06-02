@@ -9,24 +9,24 @@ import javax.inject.Inject;
 import java.util.Map;
 
 @Component
-public class ScraperThreadDispatcher {
+public class ScraperThread {
 
     private final InstagramScraper scraper;
     private final JsonBuilder jsonBuilder;
 
     @Inject
-    ScraperThreadDispatcher(final InstagramScraper scrape, final JsonBuilder builder){
+    ScraperThread(final InstagramScraper scrape, final JsonBuilder builder){
         this.scraper = scrape;
         this.jsonBuilder = builder;
     }
 
-    public Map<String, Object> scrape(final String username){
+    public Map<String, Map<String, Object>> scrape(final String username){
         try {
             final Document userPage = scraper.getDocument(scraper.buildUrl(username));
             final JsonNode userJson = scraper.extractUserJson(userPage);
-            return jsonBuilder.buildJsonResponse(userJson);
+            return jsonBuilder.buildJsonResponse(userJson, username);
         } catch (Exception e) {
-            return jsonBuilder.buildFailedResponse();
+            return jsonBuilder.buildFailedResponse(username);
         }
     }
 

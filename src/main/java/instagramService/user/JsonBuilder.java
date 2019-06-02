@@ -1,6 +1,7 @@
 package instagramService.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableMap;
 import instagramService.config.Config;
 import org.springframework.stereotype.Component;
 
@@ -18,21 +19,24 @@ public class JsonBuilder {
         config = conf;
     }
 
-    public Map<String, Object> buildJsonResponse(final JsonNode userInfo){
-        //For each item in list add the field name and the value from userInfo to map
-        Map<String, Object> result = new HashMap<>();
+    //TODO Clean up how this is done.
+    public Map<String, Map<String, Object>> buildJsonResponse(final JsonNode userInfo, final String username){
+        Map<String, Object> userData = new HashMap<>();
         config.getFields()
                 .stream()
-                .forEach(field -> result.put(field, getAttributeValue(field, userInfo)));
-        return result;
+                .forEach(field -> userData.put(field, getAttributeValue(field, userInfo)));
+        return ImmutableMap.<String, Map<String, Object>>builder()
+                .put(username, userData)
+                .build();
     }
 
-
-    public Map<String,Object> buildFailedResponse() {
-        //TODO
-        Map<String, Object> m = new HashMap<>();
-        m.put("worked", false);
-        return m;
+    //TODO Clean up how this is done.
+    public  Map<String, Map<String, Object>> buildFailedResponse(final String username) {
+        Map<String, Object> failedUserData = new HashMap<>();
+        failedUserData.put("error", "error retrieving data for user: " + username);
+        return ImmutableMap.<String, Map<String, Object>>builder()
+                .put(username, failedUserData)
+                .build();
     }
 
 

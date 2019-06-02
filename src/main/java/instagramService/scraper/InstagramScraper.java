@@ -44,8 +44,8 @@ public class InstagramScraper {
 
     //Extract user data.
     private String getUserData(final Document document) throws IOException {
-        return document.body().
-                children()
+        return document.body()
+                .children()
                 .stream()
                 .filter(element -> element.data().contains("window._sharedData") && element.data().contains("user"))
                 .findFirst()
