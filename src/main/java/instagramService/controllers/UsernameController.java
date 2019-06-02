@@ -11,6 +11,8 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,14 +40,11 @@ public class UsernameController {
     }*/
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public Map<String, List<Map<String, Object>>> username(@RequestParam String[] usernames) {
-        Map<String, List<Map<String,Object>>> response = new HashMap<>();
-        response.put("users",
-                Stream.of(usernames)
+    public List<Map<String, Object>> username(@RequestParam String[] usernames) {
+           ExecutorService executorService = Executors.newWorkStealingPool();
+           return Stream.of(usernames)
                         .map(username -> dispatcher.scrape(username))
-                        .collect(Collectors.toList())
-        );
-        return response;
+                        .collect(Collectors.toList());
     }
 
 
