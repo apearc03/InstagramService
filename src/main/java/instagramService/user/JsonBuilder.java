@@ -33,7 +33,7 @@ public class JsonBuilder {
     //TODO Clean up how this is done.
     public  Map<String, Map<String, Object>> buildFailedResponse(final String username) {
         Map<String, Object> failedUserData = new HashMap<>();
-        failedUserData.put("error", "error retrieving data for user: " + username);
+        failedUserData.put("error", "error retrieving data for user: " + username + ". The user may not exist.");
         return ImmutableMap.<String, Map<String, Object>>builder()
                 .put(username, failedUserData)
                 .build();

@@ -25,13 +25,24 @@ public class UsernameController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public List< Map<String, Map<String, Object>>> username(@RequestParam String[] usernames) {
+    public List< Map<String, Map<String, Object>>> getUsernames(@RequestParam String[] usernames) {
+      return getScrapedUsernamesJson(usernames);
+    }
+
+    //TODO
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public List< Map<String, Map<String, Object>>> postUsernames(@RequestBody String[] usernames) {
+        return getScrapedUsernamesJson(usernames);
+    }
+
+
+    private  List< Map<String, Map<String, Object>>> getScrapedUsernamesJson(final String[] usernames){
         //Create a thread for each Instagram page to scrape.
         final ExecutorService executorService = Executors.newWorkStealingPool();
         List< Map<String, Map<String, Object>>> result = new ArrayList<>();
         try {
             for(String username : usernames){
-                executorService.execute(()-> result.add(scraperThread.scrape(username)));
+                executorService.submit(()-> result.add(scraperThread.scrape(username)));
             }
             executorService.shutdown();
             executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
@@ -40,6 +51,7 @@ public class UsernameController {
         }
         return result;
     }
+
 
 
     private static Map<String, Map<String, Object>> executorServiceError(){
