@@ -1,4 +1,4 @@
-package instagramService.user;
+package instagramService.scraper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import instagramService.config.Config;
 import instagramService.config.ConfigModule;
-import instagramService.scraper.InstagramScraper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Assert;
