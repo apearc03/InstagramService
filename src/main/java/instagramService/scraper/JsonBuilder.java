@@ -1,69 +1,42 @@
 package instagramService.scraper;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.ImmutableMap;
 import instagramService.config.Config;
 import org.springframework.stereotype.Component;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class JsonBuilder {
 
     private final Config config;
+    private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     @Inject
     public JsonBuilder(final Config conf){
         config = conf;
     }
 
-    /*public Map<String, Map<String, Object>> buildJsonResponse(final JsonNode userInfo, final String username){
-        Map<String, Object> userData = new HashMap<>();
+
+    public JsonNode buildJsonResponse(final JsonNode userInfo, final String username){
+        final ObjectNode child = factory.objectNode();
         config.getFields()
                 .stream()
-                .forEach(field -> userData.put(field, getAttributeValue(field, userInfo)));
-        return ImmutableMap.<String, Map<String, Object>>builder()
-                .put(username, userData)
-                .build();
-    }*/
-
-    /*public  Map<String, Map<String, Object>> buildFailedResponse(final String username) {
-        Map<String, Object> failedUserData = new HashMap<>();
-        failedUserData.put("error", "error retrieving data for user: " + username + ". The user may not exist.");
-        return ImmutableMap.<String, Map<String, Object>>builder()
-                .put(username, failedUserData)
-                .build();
-    }*/
-
-    public Map<String, Map<String, Object>> buildJsonResponse(final JsonNode userInfo, final String username){
-
-        Map<String, Object> userData = new HashMap<>();
-        config.getFields()
-                .stream()
-                .forEach(field -> userData.put(field, getAttributeValue(field, userInfo)));
-        return ImmutableMap.<String, Map<String, Object>>builder()
-                .put(username, userData)
-                .build();
+                .forEach(field -> child.set(field, getAttributeValue(field, userInfo)));
+        return factory.objectNode().set(username, child);
     }
 
 
     public JsonNode buildFailedResponse(final String username) {
-        JsonNodeFactory factory = JsonNodeFactory.instance;
-        ObjectNode child = factory.objectNode();
-        child.put("error", "error retrieving data for user: " + username + ". The user may not exist.");
-        ObjectNode j = factory.objectNode();
-        j.set("error",child);
-        return j;
+        final ObjectNode child = factory.objectNode();
+        child.put(username, "error retrieving data for user: " + username + ". The user may not exist.");
+        return factory.objectNode().set(username, child);
     }
 
 
-    Object getAttributeValue(final String field, final JsonNode userInfo){
+    JsonNode getAttributeValue(final String field, final JsonNode userInfo){
         switch (field){
             case "followersCount":
                 return userInfo.get("edge_followed_by").get("count");
@@ -74,6 +47,10 @@ public class JsonBuilder {
             default:
                 return userInfo.get(field);
         }
+    }
+
+    public JsonNode executorServiceError(){
+        return factory.objectNode().put("Error", "There was an error processing your request");
     }
 
 }
