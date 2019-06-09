@@ -9,18 +9,18 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 
 @Component
-public class JsonBuilder {
+public class JsonUserInfoBuilder {
 
     private final Config config;
     private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     @Inject
-    public JsonBuilder(final Config conf){
+    public JsonUserInfoBuilder(final Config conf){
         config = conf;
     }
 
 
-    public JsonNode buildJsonResponse(final JsonNode userInfo, final String username){
+    public JsonNode buildUserJson(final JsonNode userInfo, final String username){
         final ObjectNode child = factory.objectNode();
         config.getFields()
                 .stream()
@@ -29,7 +29,7 @@ public class JsonBuilder {
     }
 
 
-    public JsonNode buildFailedResponse(final String username) {
+    public JsonNode buildFailedUserJson(final String username) {
         final ObjectNode child = factory.objectNode();
         child.put(username, "error retrieving data for user: " + username + ". The user may not exist.");
         return factory.objectNode().set(username, child);
@@ -52,5 +52,6 @@ public class JsonBuilder {
     public JsonNode executorServiceError(){
         return factory.objectNode().put("Error", "There was an error processing your request");
     }
+
 
 }

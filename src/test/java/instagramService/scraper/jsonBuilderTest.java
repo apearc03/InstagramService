@@ -19,7 +19,7 @@ public class jsonBuilderTest {
     private ObjectMapper mapper;
     private InstagramScraper scraper;
     private ConfigModule configModule;
-    private JsonBuilder jsonBuilder;
+    private JsonUserInfoBuilder jsonBuilder;
 
     @Before
     public void setup(){
@@ -27,7 +27,7 @@ public class jsonBuilderTest {
         config = configModule.provideConfig();
         mapper = new ObjectMapper();
         scraper = new InstagramScraper(config, mapper);
-        jsonBuilder = new JsonBuilder(config);
+        jsonBuilder = new JsonUserInfoBuilder(config);
     }
 
     @Test

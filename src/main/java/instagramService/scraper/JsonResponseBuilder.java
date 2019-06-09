@@ -15,10 +15,10 @@ import java.util.concurrent.TimeUnit;
 public class JsonResponseBuilder {
 
     private final InstagramScraper scraper;
-    private final JsonBuilder jsonBuilder;
+    private final JsonUserInfoBuilder jsonBuilder;
 
     @Inject
-    JsonResponseBuilder(final InstagramScraper scrape, final JsonBuilder builder){
+    JsonResponseBuilder(final InstagramScraper scrape, final JsonUserInfoBuilder builder){
         this.scraper = scrape;
         this.jsonBuilder = builder;
     }
@@ -29,7 +29,7 @@ public class JsonResponseBuilder {
         final ExecutorService executorService = Executors.newWorkStealingPool();
         final List<JsonNode> result = new ArrayList<>();
         try {
-            for(String username : usernames){
+            for(final String username : usernames){
                 executorService.submit(()-> result.add(scrape(username)));
             }
             executorService.shutdown();
@@ -44,9 +44,9 @@ public class JsonResponseBuilder {
         try {
             final Document userPage = scraper.getDocument(scraper.buildUrl(username));
             final JsonNode userJson = scraper.extractUserJson(userPage);
-            return jsonBuilder.buildJsonResponse(userJson, username);
+            return jsonBuilder.buildUserJson(userJson, username);
         } catch (Exception e) {
-            return jsonBuilder.buildFailedResponse(username);
+            return jsonBuilder.buildFailedUserJson(username);
         }
     }
 
