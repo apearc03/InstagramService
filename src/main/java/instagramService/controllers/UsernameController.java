@@ -21,13 +21,13 @@ public class UsernameController {
     }
 
     @RequestMapping(value = "/usernames", method = RequestMethod.GET)
-    public List<JsonNode> getUsernames(@RequestParam String[] u) {
-        return jsonResponseBuilder.getScrapedUsernamesJson(u);
+    public List<JsonNode> getUsernames(@RequestParam String[] usernames) {
+        return jsonResponseBuilder.getScrapedUsernamesJson(usernames);
     }
 
     @RequestMapping(value = "/usernames", method = RequestMethod.POST)
-    public List<JsonNode> postUsernames(@RequestBody String[] u) {
-        return jsonResponseBuilder.getScrapedUsernamesJson(u);
+    public List<JsonNode> postUsernames(@RequestBody String[] usernames) {
+        return jsonResponseBuilder.getScrapedUsernamesJson(usernames);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
