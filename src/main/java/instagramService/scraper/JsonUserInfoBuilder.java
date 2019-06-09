@@ -21,18 +21,18 @@ public class JsonUserInfoBuilder {
 
 
     public JsonNode buildUserJson(final JsonNode userInfo, final String username){
-        final ObjectNode child = factory.objectNode();
+        final ObjectNode childNode = factory.objectNode();
         config.getFields()
                 .stream()
-                .forEach(field -> child.set(field, getAttributeValue(field, userInfo)));
-        return factory.objectNode().set(username, child);
+                .forEach(field -> childNode.set(field, getAttributeValue(field, userInfo)));
+        return factory.objectNode().set(username, childNode);
     }
 
 
     public JsonNode buildFailedUserJson(final String username) {
-        final ObjectNode child = factory.objectNode();
-        child.put(username, "error retrieving data for user: " + username + ". The user may not exist.");
-        return factory.objectNode().set(username, child);
+        final ObjectNode childNode = factory.objectNode();
+        childNode.put(username, "error retrieving data for user: " + username + ". The user may not exist.");
+        return factory.objectNode().set(username, childNode);
     }
 
 
