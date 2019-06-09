@@ -1,7 +1,7 @@
 package instagramService.controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import instagramService.scraper.JsonResponseBuilder;
+import instagramService.userInfo.UserParent;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -21,12 +21,12 @@ public class UsernameController {
     }
 
     @RequestMapping(value = "/usernames", method = RequestMethod.GET)
-    public List<JsonNode> getUsernames(@RequestParam String[] usernames) {
+    public List<UserParent> getUsernames(@RequestParam String[] usernames) {
         return jsonResponseBuilder.getScrapedUsernamesJson(usernames);
     }
 
     @RequestMapping(value = "/usernames", method = RequestMethod.POST)
-    public List<JsonNode> postUsernames(@RequestBody String[] usernames) {
+    public List<UserParent> postUsernames(@RequestBody String[] usernames) {
         return jsonResponseBuilder.getScrapedUsernamesJson(usernames);
     }
 

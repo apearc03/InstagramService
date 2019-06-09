@@ -2,7 +2,6 @@ package instagramService.scraper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import instagramService.config.Config;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
@@ -13,18 +12,16 @@ import java.io.IOException;
 @Component
 public class InstagramScraper {
 
-    private final Config config;
+    private static final String URL = "https://www.instagram.com/";
     private final ObjectMapper mapper;
 
     @Inject
-    public InstagramScraper(final Config conf, final ObjectMapper map){
-        this.config = conf;
+    public InstagramScraper(final ObjectMapper map){
         this.mapper = map;
     }
 
     public String buildUrl(final String name) {
-        return config.getUrl()
-                .concat(name);
+        return URL.concat(name);
     }
 
     public Document getDocument(final String url) throws Exception {
@@ -34,7 +31,7 @@ public class InstagramScraper {
     //extract user json from the data.
     public JsonNode extractUserJson(final Document document) throws Exception {
                final String userData = getUserData(document);
-                return mapper.readTree(userData.substring(userData.indexOf("{")))
+               return mapper.readTree(userData.substring(userData.indexOf("{")))
                         .get("entry_data")
                         .get("ProfilePage")
                         .get(0)

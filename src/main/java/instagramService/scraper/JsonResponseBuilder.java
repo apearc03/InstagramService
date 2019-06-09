@@ -1,6 +1,7 @@
 package instagramService.scraper;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import instagramService.userInfo.UserParent;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
@@ -24,23 +25,23 @@ public class JsonResponseBuilder {
     }
 
 
-    public List<JsonNode> getScrapedUsernamesJson(final String[] usernames){
+    public List<UserParent> getScrapedUsernamesJson(final String[] usernames){
         //Create a thread for each Instagram page to scrape.
         final ExecutorService executorService = Executors.newWorkStealingPool();
-        final List<JsonNode> result = new ArrayList<>();
+        final List<UserParent> result = new ArrayList<>();
         try {
             for(final String username : usernames){
                 executorService.submit(()-> result.add(scrape(username)));
             }
             executorService.shutdown();
             executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        } catch (Exception e) {
-            result.add(jsonBuilder.executorServiceError());
+        } catch (final Exception e) {
+            return result;
         }
         return result;
     }
 
-    private JsonNode scrape(final String username){
+    private UserParent scrape(final String username){
         try {
             final Document userPage = scraper.getDocument(scraper.buildUrl(username));
             final JsonNode userJson = scraper.extractUserJson(userPage);

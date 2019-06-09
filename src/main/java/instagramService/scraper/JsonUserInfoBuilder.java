@@ -1,38 +1,41 @@
 package instagramService.scraper;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import instagramService.config.Config;
+import instagramService.userInfo.UserField;
+import instagramService.userInfo.UserInfo;
+import instagramService.userInfo.UserParent;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.stream.Stream;
 
 @Component
 public class JsonUserInfoBuilder {
 
-    private final Config config;
+    private final ObjectMapper mapper;
     private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     @Inject
-    public JsonUserInfoBuilder(final Config conf){
-        config = conf;
+    public JsonUserInfoBuilder(final ObjectMapper map){
+        this.mapper = map;
     }
 
 
-    public JsonNode buildUserJson(final JsonNode userInfo, final String username){
+    public UserParent buildUserJson(final JsonNode userInfo, final String username){
         final ObjectNode childNode = factory.objectNode();
-        config.getFields()
-                .stream()
-                .forEach(field -> childNode.set(field, getAttributeValue(field, userInfo)));
-        return factory.objectNode().set(username, childNode);
+        Stream.of(
+                UserField.values()
+        ).forEach(userField -> childNode.set(userField.getName(), getAttributeValue(userField.getName(), userInfo)));
+        final UserParent userParent = new UserParent(username, mapper.convertValue(childNode, UserInfo.class));
+        return userParent;
     }
 
 
-    public JsonNode buildFailedUserJson(final String username) {
-        final ObjectNode childNode = factory.objectNode();
-        childNode.put(username, "error retrieving data for user: " + username + ". The user may not exist.");
-        return factory.objectNode().set(username, childNode);
+    public UserParent buildFailedUserJson(final String username) {
+        return new UserParent(username);
     }
 
 
@@ -47,10 +50,6 @@ public class JsonUserInfoBuilder {
             default:
                 return userInfo.get(field);
         }
-    }
-
-    public JsonNode executorServiceError(){
-        return factory.objectNode().put("Error", "There was an error processing your request");
     }
 
 

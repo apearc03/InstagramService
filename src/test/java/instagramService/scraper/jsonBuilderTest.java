@@ -2,32 +2,27 @@ package instagramService.scraper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.BooleanNode;
-import com.fasterxml.jackson.databind.node.IntNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import instagramService.config.Config;
-import instagramService.config.ConfigModule;
+import com.fasterxml.jackson.databind.node.*;
+import instagramService.userInfo.UserInfo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+
 public class jsonBuilderTest {
 
-    private Config config;
     private ObjectMapper mapper;
     private InstagramScraper scraper;
-    private ConfigModule configModule;
     private JsonUserInfoBuilder jsonBuilder;
+    private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     @Before
     public void setup(){
-        configModule = new ConfigModule();
-        config = configModule.provideConfig();
         mapper = new ObjectMapper();
-        scraper = new InstagramScraper(config, mapper);
-        jsonBuilder = new JsonUserInfoBuilder(config);
+        scraper = new InstagramScraper(mapper);
+        jsonBuilder = new JsonUserInfoBuilder(mapper);
     }
 
     @Test
@@ -118,5 +113,15 @@ public class jsonBuilderTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+
+    @Test
+    public void testCustomJSON(){
+        final ObjectNode objectNode = factory.objectNode();
+        objectNode.put("full_name", "David Beckham");
+        final UserInfo testUser = mapper.convertValue(objectNode, UserInfo.class);
+        Assert.assertEquals("David Beckham", testUser.full_name);
     }
 }
