@@ -55,6 +55,18 @@ Response for both of the above requests.
   }
 ]
 ```
+
+Response for non existent users.
+
+```json
+[
+  {
+    "username": "nonexistentaccount",
+    "userinfo": null
+  }
+]
+```
+
 # Running Locally
 
 ```console
@@ -69,4 +81,9 @@ mvn spring-boot:run
 
 Default port is 8080
 
+# Test it out here
+
+Deployed with Heroku at https://gramscraper.herokuapp.com
+
+(Heroku apps take a few seconds to start up if idle)
 
