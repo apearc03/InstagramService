@@ -66,6 +66,7 @@ mvn clean install
 ```console
 mvn spring-boot:run
 ```
-Default port is 8080;
+
+Default port is 8080
 
 
