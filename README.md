@@ -8,13 +8,13 @@ User pages are scraped on different threads for faster response times.
 
 # Requests
 GET with usernames as request parameters.
-
+```console
 curl -X GET "https://gramscraper.herokuapp.com/usernames?usernames=davidbeckham,KimKardashian" -H "accept: */*"
-
+```
 POST with usernames in a JSON array of the request body.
-
+```console
 curl -X POST "https://gramscraper.herokuapp.com/usernames" -H "accept: */*" -H "Content-Type: application/json" -d "[\"davidbeckham\", \"KimKardashian\"]"
-
+```
 # Response
 Response for both of the above requests.
 ```json
