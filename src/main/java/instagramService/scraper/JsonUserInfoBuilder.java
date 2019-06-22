@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class JsonUserInfoBuilder {
 
     private final ObjectMapper mapper;
-    private final JsonNodeFactory factory = JsonNodeFactory.instance;
+    private static final JsonNodeFactory FACTORY = JsonNodeFactory.instance;
 
     @Inject
     public JsonUserInfoBuilder(final ObjectMapper map){
@@ -25,7 +25,7 @@ public class JsonUserInfoBuilder {
 
 
     public UserParent buildUserJson(final JsonNode userInfo, final String username){
-        final ObjectNode childNode = factory.objectNode();
+        final ObjectNode childNode = FACTORY.objectNode();
         Stream.of(
                 UserField.values()
         ).forEach(userField -> childNode.set(userField.getName(), getAttributeValue(userField.getName(), userInfo)));
